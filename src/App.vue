@@ -1,32 +1,46 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+  <div>
+    <v-text-field
+              v-model="task_input"
+              label="Че поделать"
+              outlinedtoDoList
+            ></v-text-field>
+    <v-btn elevation="1" @click="tasks_list.push({idx: (tasks_list.length == 0) ? 0 : tasks_list.at(-1)['idx'] + 1, name: task_input, is_done: false})">Добавить задание</v-btn>
+    <v-divider></v-divider>
+    <div v-for="(task, index) in tasks_list" v-bind:key= task.idx> {{ task.name }} {{task.idx}}
+      <input type="checkbox" name="isDone" v-if="task.is_done == true" checked>
+      <input type="checkbox" name="isDone" v-else>
+      <v-btn elevation="1" @click="tasks_list.splice(index, 1)">Удалить</v-btn>
+
+
+    
     </div>
-    <router-view/>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+  export default {
+    data () {
+      return {
+        tasks_list: [
+          {
+            idx: 0,
+            name: 'Погладить кота',
+            is_done: true,
+          },
+          {
+            idx: 1,
+            name: 'Покормить кота',
+            is_done: false,
+          },
+        ],
+        methods: {
+        },
+        components: {
+        }
+      }
 
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+    
+    },
+  }
+</script>

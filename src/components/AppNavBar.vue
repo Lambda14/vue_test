@@ -1,6 +1,6 @@
 <template>
   <v-container>
-      <v-app-bar app color="deep-purple accent-4" dark dense >
+      <v-app-bar app color="cyan accent-4" dark dense >
         <v-toolbar-title>RK Orders</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click="$router.push('/')"> <v-icon> mdi-home </v-icon> </v-btn>

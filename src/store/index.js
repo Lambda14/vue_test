@@ -8,17 +8,20 @@ export default new Vuex.Store({
     license: {}
   },
   mutations: {
+    setLicense (state, payload) {
+      state.license = payload
+    }
   },
   getters: {
-    getLicense () {
-      return this.license
+    getLicense (state) {
+      return state.license
     }
   },
   actions: {
-    async getLicenseInfo () {
-      let r = await fetch('http://localhost:8888/license_status')
+    async fetchLicenseInfo (ctx) {
+      let r = await fetch('/license_status')
       r = await r.json()
-      this.license = r
+      ctx.commit('setLicense', r)
     }
   },
   modules: {

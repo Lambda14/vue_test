@@ -1,19 +1,24 @@
 <template>
     <div>
-        <h1 v-if="loading">
-            Загрузка данных...
-        </h1>
+        <div v-if="loading">
+            <LoadingLayout></LoadingLayout>
+        </div>
         <div v-else>
+          <v-row
+            justify="start"
+          >
             <div v-for="(order, index) in order_list" :key="index">
                 <OrderCard :order_details=order></OrderCard>
             </div>
-            {{ order_list }}
+          </v-row>
         </div>
     </div>
   </template>
   
 <script>
 import OrderCard from '../components/OrderCard.vue'
+import LoadingLayout from '../layouts/LoadingLayout.vue'
+
 
 export default {
       data() {
@@ -26,7 +31,7 @@ export default {
       methods: {
         async getOrders() {
             this.loading = true
-            let r = await fetch('http://localhost:8888/order_list')
+            let r = await fetch('/order_list')
             r = await r.json()
             this.order_list = r
             this.loading = false 
@@ -36,7 +41,8 @@ export default {
         await this.getOrders()
       },
       components: {
-         OrderCard
+        OrderCard,
+        LoadingLayout
       }
   }
 </script>

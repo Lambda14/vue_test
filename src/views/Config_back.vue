@@ -1,13 +1,13 @@
 <template>
     <v-container>
         <component :is="layout" @set="setConfig()" @reload="getConfig()" :config="config" :feature="editSettingsFeature"/>
-        <ConfigSaveOverlay :overlay="overlay"></ConfigSaveOverlay>
+        <WaitingOverlay :overlay="overlay"></WaitingOverlay>
     </v-container>
 
 </template>
 
 <script>
-import ConfigSaveOverlay from '../components/ConfigSaveOverlay.vue'
+import WaitingOverlay from '../components/WaitingOverlay.vue'
 import LoadingLayout from '../layouts/LoadingLayout.vue'
 import NoSettingsFeatureLayout from '../layouts/NoSettingsFeatureLayout.vue'
 import SettingsLayout from '../layouts/SettingsLayout.vue'
@@ -29,14 +29,14 @@ import SettingsLayout from '../layouts/SettingsLayout.vue'
             async getConfig () {
                 this.loading = true
                 let r = await fetch('/config')
-                r = await r.json()
+                r = await this.$store.dispatch('fetchError', {response: r, text: 'Получение настроек.'})
+                if (r == false) { this.loading = false; return 0 }
                 this.config = r
                 this.loading = false      
             },
             async setConfig () {
                 this.overlay.showUP = true
                 this.overlay.loading = true
-                console.log(JSON.stringify(this.config))
                 let r = await fetch('/config', { 
                     headers: {
                         'Accept': 'application/json',
@@ -45,9 +45,10 @@ import SettingsLayout from '../layouts/SettingsLayout.vue'
                     method: "POST", 
                     body: JSON.stringify(this.config)
                 })
-                r = await r.json()
-                console.log(r)
+                r = await this.$store.dispatch('fetchError', {response: r, text: 'Сохранение настроек.'})
+                if (r == false) { this.overlay.loading = false; this.overlay.text = 'Произошла ошибка при сохранении настроек'; return 0 }
                 this.overlay.loading = false
+                this.overlay.text = 'Конфигурация успешно сохранена'
                 
                 
             },
@@ -75,7 +76,7 @@ import SettingsLayout from '../layouts/SettingsLayout.vue'
             NoSettingsFeatureLayout,
             SettingsLayout,
             LoadingLayout,
-            ConfigSaveOverlay,
+            WaitingOverlay,
         }
     }
 

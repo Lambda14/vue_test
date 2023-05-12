@@ -1,13 +1,23 @@
 <template>
-    <v-row
-        align="center"
-        justify="center"
-    >
-        <v-progress-circular
-        :size="100"
-        :width="7"
-        color="cyan"
-        indeterminate
-        ></v-progress-circular>
-    </v-row>
+    <Loading></Loading>
+
 </template>
+
+<script>
+import Loading from '../components/Loading.vue';
+
+export default {
+    data () {
+        return {
+
+        }
+        
+    },
+    components: {
+            Loading
+        }
+}
+
+
+
+</script>

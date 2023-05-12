@@ -7,14 +7,6 @@ import "vuetify/dist/vuetify.min.css";
 
 Vue.config.productionTip = false
 
-Vue.mixin({
-  methods: {
-    http_error_handler: function () {
-      alert("Hello world")
-    },
-  },
-})
-
 new Vue({
   router,
   store,

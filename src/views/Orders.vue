@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="loading">
-            <LoadingLayout></LoadingLayout>
+            <Loading :text="'Загружаем заказы...'"></Loading>
         </div>
         <div v-else>
           <v-row
@@ -16,18 +16,18 @@
   </template>
   
 <script>
+import Loading from '../components/Loading.vue'
 import OrderCard from '../components/OrderCard.vue'
-import LoadingLayout from '../layouts/LoadingLayout.vue'
 
 export default {
-      data() {
-        return {
-            loading: false,
+  data() {
+    return {
+      loading: false,
             order_list: {}
 
-        }
-      },
-      methods: {
+          }
+        },
+        methods: {
         async getOrders() {
             this.loading = true
             let r = await fetch('/order_list')
@@ -35,14 +35,14 @@ export default {
             if (r == false) { this.loading = false; return 0 }
             this.order_list = r
             this.loading = false
-        }
-      },
-      async mounted() {
-        await this.getOrders()
-      },
-      components: {
-        OrderCard,
-        LoadingLayout
+          }
+        },
+        async mounted() {
+          await this.getOrders()
+        },
+        components: {
+          OrderCard,
+          Loading,
       }
   }
 </script>

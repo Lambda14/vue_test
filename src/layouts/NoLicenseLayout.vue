@@ -11,7 +11,7 @@
             <v-card-title>Отсутствует лицензия</v-card-title>
             <v-card-text>
                 <div>Работоспособность ПО ограничена в виду отсутствия действующей лицензии.</div>
-                <div>Дата окончания: {{ this.$store.getters.getLicense.expire_date  }}</div>
+                <div>Дата окончания: {{ this.$store.getters.license.expire_date  }}</div>
             </v-card-text>
         </v-card>
         </v-row>

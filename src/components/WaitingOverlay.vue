@@ -5,9 +5,9 @@
           class="align-center justify-center"
         >
         <div v-if="overlay.loading">
-            <Loading></Loading>
+            <Loading :text="'Сохраняем настройки...'"></Loading>
         </div>
-        <v-column v-else>
+        <v-col v-else>
             <v-row justify="center" align="center">{{ overlay.text }}</v-row>
             <v-row justify="center" align="center">
             <v-btn
@@ -17,7 +17,7 @@
                 Ok
             </v-btn>
             </v-row>
-        </v-column>
+        </v-col>
     </v-overlay>
 </template>
 

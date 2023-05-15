@@ -25,7 +25,7 @@ export default {
   methods: { 
   },
   mounted () {
-    let error = this.$store.getters.getErrors
+    let error = this.$store.getters.errors
     this.text = `${error.text}\nКод ошибки: \n${error.response.error_class}: ${error.response.error_text}`
   }
 

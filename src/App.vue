@@ -1,10 +1,16 @@
 <template>
   <v-main>
-    <v-app>
-      <div v-if="Object.keys(this.$store.getters.getErrors).length != 0">
+    <v-app> 
+      <div v-if="Object.keys(this.$store.getters.errors).length != 0">
         <ErrorTitle></ErrorTitle>
       </div>
-      <component :is="layout" />
+      <div v-if="loading">
+        <Loading :text="'Проверка лицензии...'"></Loading>
+      </div>
+      <div v-else>
+        <component :is="layout" />
+      </div>
+
     </v-app>
   </v-main>
   
@@ -12,35 +18,40 @@
 
 <script>
 import ErrorTitle from './components/ErrorTitle.vue';
-import LoadingLayout from './layouts/LoadingLayout.vue';
+import Loading from './components/Loading.vue';
+// import LoadingLayout from './layouts/LoadingLayout.vue';
 import MainLayout from './layouts/MainLayout.vue';
 import NoLicenseLayout from './layouts/NoLicenseLayout.vue';
-
 
 export default {
   name: 'App',
   data() {
     return {
-      
+      loading: false,
     }
   },
   methods: {
-    
+    async fetchLicense () {
+      this.loading = true
+      await this.$store.dispatch('fetchLicenseInfo')
+      this.loading = false
+    },
   },
   computed: {
     layout () {
-      if (Object.keys(this.$store.getters.getLicense).length == 0) { return 'LoadingLayout' }
-      return this.$store.getters.getLicense.valid ?  'MainLayout' : 'NoLicenseLayout'
+      if (this.loading) { return 'LoadingLayout' }
+      return this.$store.getters.license.valid ?  'MainLayout' : 'NoLicenseLayout'
     },
   },
   async mounted() {
-    await this.$store.dispatch('fetchLicenseInfo')
+    await this.fetchLicense()
   },
   components: {   
     MainLayout,
     NoLicenseLayout,
-    LoadingLayout,
-    ErrorTitle,
+    // LoadingLayout,
+    Loading,
+    ErrorTitle
   }
 };
 </script>

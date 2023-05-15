@@ -18,27 +18,33 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    getLicense (state) {
+    license (state) {
       return state.license
     },
-    getErrors (state) {
+    errors (state) {
       return state.handledError
     }
   },
   actions: {
     async fetchLicenseInfo (ctx) {
       let r = await fetch('/license_status')
-      r = await r.json()
+      r = await this.dispatch('fetchError', {response: r, text: 'Получение данных лицензии.'})
+      if (r == false) { return 0 }
       ctx.commit('setLicense', r)
     },
+
     async fetchError (ctx, payload) {
+      console.log(payload)
       let status_code = payload.response.status
       let status_code_class = String(status_code)[0]
-      let res = await payload.response.json()
-      if (status_code_class == '2') { return res } //ok
-      else if (status_code_class == '4') { payload.response = res; payload.text = `Произошла ошибка клиентской части во время операции: ${payload.text}` ; ctx.commit('setError', payload); return false } //ошибка на клиентской стороне
-      else if (status_code_class == '5') { payload.response = res; payload.text = `Произошла ошибка серверной части во время операции: ${payload.text}` ; ctx.commit('setError', payload); return false } //ошибка на серверной стороне
-      else { return true } //не очень интересные классы (100, 300) 
+      try { 
+        let res = await payload.response.json() 
+        if (status_code_class == '2') { return res } //ok
+        else if (status_code_class == '4') { payload.response = res; payload.text = `Произошла ошибка клиентской части во время операции: ${payload.text}` ; ctx.commit('setError', payload); return false } //ошибка на клиентской стороне
+        else if (status_code_class == '5') { payload.response = res; payload.text = `Произошла ошибка серверной части во время операции: ${payload.text}` ; ctx.commit('setError', payload); return false } //ошибка на серверной стороне
+        else { return true } //не очень интересные классы (100, 300) 
+      }
+      catch (e) { return false }
     },
     clearErrors (ctx) {
       ctx.commit('setError', {})

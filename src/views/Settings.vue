@@ -36,24 +36,13 @@ export default {
     methods: {
         async getConfig () {
             this.loading = true
-            let r = await fetch('/config')
-            r = await this.$store.dispatch('fetchError', {response: r, text: 'Получение настроек.'})
-            if (r == false) { this.loading = false; return 0 }
-            this.config = r
+            this.config = await this.$store.dispatch('provideRequest', {endpoint: '/config'})
             this.loading = false      
         },
         async setConfig () {
             this.overlay.showUP = true
             this.overlay.loading = true
-            let r = await fetch('/config', { 
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }, 
-                method: "POST", 
-                body: JSON.stringify(this.config)
-            })
-            r = await this.$store.dispatch('fetchError', {response: r, text: 'Сохранение настроек.'})
+            let r = await this.$store.dispatch('provideRequest', {endpoint: '/config', body: this.config})
             if (r == false) { this.overlay.loading = false; this.overlay.text = 'Произошла ошибка при сохранении настроек'; return 0 }
             this.overlay.loading = false
             this.overlay.text = 'Конфигурация успешно сохранена'

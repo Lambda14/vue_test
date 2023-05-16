@@ -30,10 +30,7 @@ export default {
         methods: {
         async getOrders() {
             this.loading = true
-            let r = await fetch('/order_list')
-            r = await this.$store.dispatch('fetchError', {response: r, text: 'Получение списка заказов.'})
-            if (r == false) { this.loading = false; return 0 }
-            this.order_list = r
+            this.order_list = await this.$store.dispatch('provideRequest', {endpoint: '/order_list'})
             this.loading = false
           }
         },

@@ -1,8 +1,8 @@
 <template>
   <v-main>
     <v-app> 
-      <div v-if="Object.keys(this.$store.getters.errors).length != 0">
-        <ErrorTitle></ErrorTitle>
+      <div v-if="this.$store.getters.errors">
+        <ErrorTitle :text="this.$store.getters.errors"></ErrorTitle>
       </div>
       <div v-if="loading">
         <Loading :text="'Проверка лицензии...'"></Loading>

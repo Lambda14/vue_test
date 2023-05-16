@@ -6,7 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     license: {},
-    handledError: {}
+    handledError: null
 
   },
   mutations: {
@@ -27,27 +27,32 @@ export default new Vuex.Store({
   },
   actions: {
     async fetchLicenseInfo (ctx) {
-      let r = await fetch('/license_status')
-      r = await this.dispatch('fetchError', {response: r, text: 'Получение данных лицензии.'})
-      if (r == false) { return 0 }
+      let r = await this.dispatch('provideRequest', {endpoint: '/license_status'})
       ctx.commit('setLicense', r)
     },
 
-    async fetchError (ctx, payload) {
-      console.log(payload)
-      let status_code = payload.response.status
-      let status_code_class = String(status_code)[0]
-      try { 
-        let res = await payload.response.json() 
-        if (status_code_class == '2') { return res } //ok
-        else if (status_code_class == '4') { payload.response = res; payload.text = `Произошла ошибка клиентской части во время операции: ${payload.text}` ; ctx.commit('setError', payload); return false } //ошибка на клиентской стороне
-        else if (status_code_class == '5') { payload.response = res; payload.text = `Произошла ошибка серверной части во время операции: ${payload.text}` ; ctx.commit('setError', payload); return false } //ошибка на серверной стороне
-        else { return true } //не очень интересные классы (100, 300) 
+    async provideRequest (ctx, {endpoint, body}) {
+      try {
+        let r = await fetch(endpoint, body ? {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(body)
+        } : {});
+        let data = await r.json()
+        if (r.ok) return data 
+        else {
+          ctx.commit('setError', data)
+          return false
+        }
       }
-      catch (e) { return false }
+      catch (e) { 
+        ctx.commit('setError', e)
+        return false
+      }
     },
+
     clearErrors (ctx) {
-      ctx.commit('setError', {})
+      ctx.commit('setError', null)
     }
   },
   modules: {

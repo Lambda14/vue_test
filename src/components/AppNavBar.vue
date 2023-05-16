@@ -6,6 +6,7 @@
         <!-- <v-btn icon @click="$router.push('/')"> <v-icon> mdi-home </v-icon> </v-btn> -->
         <v-btn icon @click="$router.push('orders')"> <v-icon> mdi-list-box-outline</v-icon> </v-btn>
         <v-btn icon @click="$router.push('settings')"> <v-icon> mdi-cog </v-icon> </v-btn>
+        <v-btn icon @click="logOut"> <v-icon> mdi-logout </v-icon> </v-btn>
       </v-app-bar>
     </v-container>
   </template>
@@ -17,6 +18,12 @@
         return {
         
         }
+    },
+    methods: {
+      logOut () {
+        localStorage.auth = false
+        this.$router.go('/')
+      }
     }
 
 

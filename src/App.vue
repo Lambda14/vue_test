@@ -19,7 +19,7 @@
 <script>
 import ErrorTitle from './components/ErrorTitle.vue';
 import Loading from './components/Loading.vue';
-// import LoadingLayout from './layouts/LoadingLayout.vue';
+import LoginLayout from './layouts/LoginLayout.vue';
 import MainLayout from './layouts/MainLayout.vue';
 import NoLicenseLayout from './layouts/NoLicenseLayout.vue';
 
@@ -40,6 +40,8 @@ export default {
   computed: {
     layout () {
       if (this.loading) { return 'LoadingLayout' }
+      console.log(localStorage.auth)
+      if (localStorage.auth != 'true') {return 'LoginLayout'}
       return this.$store.getters.license.valid ?  'MainLayout' : 'NoLicenseLayout'
     },
   },
@@ -49,9 +51,9 @@ export default {
   components: {   
     MainLayout,
     NoLicenseLayout,
-    // LoadingLayout,
     Loading,
-    ErrorTitle
+    ErrorTitle,
+    LoginLayout,
   }
 };
 </script>
